@@ -59,7 +59,7 @@ body {
 }
 
 /* Card */
-.card {
+.listing-card {
     border: none !important;
     margin-bottom: 2rem;
 }
@@ -115,4 +115,8 @@ Show page */
 .show-card {
     padding-left: 0;
     padding-right: 0;
+}
+
+ .form-control {
+  margin-bottom: 15px;
 }

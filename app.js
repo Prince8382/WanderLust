@@ -1,18 +1,24 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const multer = require("multer");
-const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
+
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 
                                       
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+
 main()
 .then(() => console.log("Connected to DB"))
 .catch((err) => console.log(err));
@@ -30,106 +36,51 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
-                                      // Multer setup
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "public/uploads"));
+const sessionOptions = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expire: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
+};
 
 //Route
 app.get("/", (req, res) => res.send("Hii, I am root"));
 
-const validateListing = (req, res, next) => {
-  const { error } = listingSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(el => el.message).join(",");
-    throw new ExpressError(400, msg);
-  } else {
-    next();
-  }
-};
+app.use(session(sessionOptions));
+app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
 
-// Index Route
-app.get("/listings", wrapAsync(async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("listings/index.ejs", { allListings });
-}));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-// New Route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new.ejs");
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
+  next();
 });
 
-//// Create Route
-// app.post("/listings", 
-//   wrapAsync(async (req, res, next) => {
-//     const newListing = new Listing(req.body.listing);
-//     await newListing.save();
-//     res.redirect("/listings");
-//   })
-// );
-app.post(
-  "/listings",
-  upload.none(),        // because form uses multipart/form-data
-  validateListing,     // validate after multer
-  wrapAsync(async (req, res) => {
-    const newListing = new Listing(req.body.listing);
-    await newListing.save();
-    res.redirect("/listings");
-  })
-);
+// app.get("/demouser", async (req, res) => {
+//   let fakeUser = new User ({
+//     email: "prince@gmail.com",
+//     username: "prince-chaudhary",
+//   });
 
+//   let registeredUser = await User.register(fakeUser, "helloworld");
+//   res.send(registeredUser);
+// });
 
-// Show Route
-app.get("/listings/:id", validateListing, wrapAsync(async (req, res) => {
-  const { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("listings/show.ejs", { listing });
-}));
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
 
-// Edit Route
-app.get("/listings/:id/edit", validateListing, wrapAsync(async (req, res) => {
-  const { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("listings/edit.ejs", { listing });
-}));
-
-// Update Route 
-app.put("/listings/:id", validateListing, upload.single("image"), wrapAsync(async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-
-  listing.title = req.body.listing.title;
-  listing.description = req.body.listing.description;
-  listing.price = req.body.listing.price;
-  listing.country = req.body.listing.country;
-  listing.location = req.body.listing.location;
-
-if (req.file) {
-  listing.image = {
-    filename: req.file.filename,
-    url: `/uploads/${req.file.filename}`,
-  };
-}
-
-
-  await listing.save();
-  res.redirect(`/listings/${id}`);
-}));
-
-
-// DELETE Route
-app.delete("/listings/:id", wrapAsync(async (req, res) => {
-  const { id } = req.params;
-  await Listing.findByIdAndDelete(id);
-  res.redirect("/listings");
-}));
 
  //Error handling 
  app.all(/(.*)/, (req, res, next) => {
