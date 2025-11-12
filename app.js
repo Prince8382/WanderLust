@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV !== "prodection") {
+if(process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
@@ -66,7 +66,7 @@ const sessionOptions = {
 };
 
 //Route
-// app.get("/", (req, res) => res.send("Hii, I am root"));
+ app.get("/", (req, res) => res.send("Hii, I am root"));
 
 
 app.use(session(sessionOptions));
@@ -111,6 +111,10 @@ app.use("/", userRouter);
   res.status(statusCode).send(message);
  });
 
-app.listen(8080, () => {
-  console.log("server is listening to port 8080")
+// app.listen(8080, () => {
+//   console.log("server is listening to port 8080")
+// });
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 });
