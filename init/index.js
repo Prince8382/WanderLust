@@ -21,9 +21,10 @@ const initDB = async () => {
   initData.data = initData.data.map((obj) => ({
     ...obj,
     owner: "690c97a7e685b4948ba93918",
+    category: "trending",
   }));
   await Listing.insertMany(initData.data);
-  console.log("data was initialized");
+  console.log("data was initialized successfully with category field!");
 };
 
 initDB();

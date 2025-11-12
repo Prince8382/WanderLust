@@ -7,11 +7,13 @@ const listingSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, trim: true },
   image: {
+    // filename: String,
+    // url: {
+    //   type: String,
+    //   default: "https://www.istockphoto.com/photo/maldives-island-gm1442179368-481642124"
+    // }
+    url: String,
     filename: String,
-    url: {
-      type: String,
-      default: "https://www.istockphoto.com/photo/maldives-island-gm1442179368-481642124"
-    }
   },
   price: {
     type: Number,
@@ -21,6 +23,13 @@ const listingSchema = new Schema({
   },
   location: String,
   country: String,
+
+  category: {
+    type: String,
+    enum: ["trending", "rooms", "castles", "pools", "cities", "mountain", "camping", "farms", "arctic", "domes", "boats"],
+    default: "trending"
+  },
+
   reviews: [
     {
       type: Schema.Types.ObjectId,
