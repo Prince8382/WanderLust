@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
   .navbar form .form-control,
   .navbar form .btn {
     height: 38px;        
@@ -50,14 +50,117 @@
       </div>
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Airbnb your home</a>
-        <% if(!currUser) { %>
+         if(!currUser) { %>
         <a class="nav-link" href="/signup"><b>Sign up</b></a>
         <a class="nav-link" href="/login"><b>Log in</b></a>
-        <% } %>
-        <% if(currUser) { %>
+         } 
+         if(currUser) { %>
         <a class="nav-link" href="/logout"><b>Log out</b></a>
-        <% } %>
+         } %>
       </div>
+    </div>
+  </div>
+</nav> -->
+
+<style>
+  /* Navbar mini styles (abhi ke liye yahin rakh lo; baad me CSS file me shift kar lenge) */
+  .navbar form .form-control,
+  .navbar form .btn {
+    height: 38px;        
+  }
+  .navbar form .btn {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+  .search-btn {
+    background-color: #fe424d;
+    color: #fff;
+    border-radius: 25px;
+    padding: 0 1rem;
+  }
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #fff;
+  }
+  .search-btn i {
+    margin-right: 0.5rem;
+  }
+  .search-inp {
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  .navbar-nav .nav-link { color:#222; font-weight:500; }
+  .navbar-nav .nav-link:hover { color:#fe424d; }
+  @media (max-width:575.98px){
+    .search-inp{width:120px;}
+    .search-btn{padding:0 .6rem;font-size:.95rem;}
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg border-bottom sticky-top bg-white">
+  <div class="container-fluid">
+
+    <!-- Brand (sirf large screen pe) -->
+    <a class="navbar-brand d-none d-md-flex align-items-center" href="/listings">
+      <i class="fa-regular fa-compass fs-4 me-2 text-danger"></i>
+      <span class="fw-bold">Wanderlust</span>
+    </a>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#wlNavbar"
+      aria-controls="wlNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapse content -->
+    <div class="collapse navbar-collapse" id="wlNavbar">
+
+      <!-- Brand (sirf chhoti screen pe) -->
+      <a class="navbar-brand d-md-none mb-2" href="/listings">
+        <i class="fa-regular fa-compass fs-4 text-danger"></i>
+        <span class="ms-2 fw-bold">Wanderlust</span>
+      </a>
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings"><i class="fa-solid fa-earth-asia me-1"></i>Explore</a>
+        </li>
+      </ul>
+
+      <form class="d-flex mx-lg-3 my-2 my-lg-0" role="search" action="/listings/search" method="GET">
+        <input class="form-control me-2 search-inp" type="search" name="q" placeholder="Search destinations" aria-label="Search">
+        <button class="btn search-btn" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span class="d-none d-sm-inline">Search</span>
+        </button>
+      </form>
+
+      <ul class="navbar-nav ms-lg-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings/new"><i class="fa-solid fa-plus me-1"></i>Airbnb your home</a>
+        </li>
+
+        <% if (!currUser) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/signup"><i class="fa-solid fa-user-plus me-1"></i>Sign up</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login"><i class="fa-solid fa-right-to-bracket me-1"></i>Log in</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <form action="/logout" method="POST" class="d-inline">
+              <button class="btn nav-link" style="background:transparent;border:0;padding:0;">
+                <i class="fa-solid fa-right-from-bracket me-1"></i>Log out
+              </button>
+            </form>
+          </li>
+        <% } %>
+      </ul>
     </div>
   </div>
 </nav>
