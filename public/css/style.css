@@ -1,4 +1,4 @@
-/* 🌍 GLOBAL STYLES */
+/*  GLOBAL STYLES */
 body {
   font-family: "Plus Jakarta Sans", sans-serif !important;
   display: flex;
@@ -11,9 +11,7 @@ body {
   flex: 1;
 }
 
-/* ------------------------------- */
-/* 🧭 NAVBAR - Airbnb Inspired */
-/* ------------------------------- */
+
 .navbar {
   height: 5rem;
   background-color: white;
@@ -44,7 +42,7 @@ body {
   transition: color 0.2s ease-in-out;
 }
 
-/* 🔍 Search Box */
+/*  Search Box */
 .navbar .input-group {
   align-items: center;
 }
@@ -102,9 +100,7 @@ body {
   }
 }
 
-/* ------------------------------- */
-/* 🗂️ CATEGORY BAR - Airbnb style */
-/* ------------------------------- */
+
 #filters {
   display: flex;
   flex-wrap: nowrap;
@@ -167,9 +163,7 @@ body {
   border-radius: 10px;
 }
 
-/* ------------------------------- */
-/* 🧾 TAX TOGGLE BAR */
-/* ------------------------------- */
+
 .tax-toggle {
   border: 1px solid #ccc;
   border-radius: 1rem;
@@ -181,9 +175,6 @@ body {
   justify-content: center;
 }
 
-/* ------------------------------- */
-/* 🏡 LISTING CARDS */
-/* ------------------------------- */
 .listing-card {
   border: none !important;
   margin-bottom: 2rem;
@@ -215,9 +206,7 @@ body {
   color: inherit;
 }
 
-/* ------------------------------- */
-/* 🏞️ SHOW PAGE */
-/* ------------------------------- */
+
 .show-img {
   height: 30vh;
   border-radius: 1rem;
@@ -246,9 +235,7 @@ body {
   background-color: #e11d48 !important;
 }
 
-/* ------------------------------- */
-/* 🦶 FOOTER */
-/* ------------------------------- */
+
 .f-info {
   text-align: center;
   height: 8rem;
@@ -280,9 +267,6 @@ body {
   color: #ff385c;
 }
 
-/* ------------------------------- */
-/* 📱 RESPONSIVE TWEAKS */
-/* ------------------------------- */
 @media (max-width: 768px) {
   #filters {
     padding: 0.5rem;
@@ -303,4 +287,58 @@ body {
   .card-img-top {
     height: 16rem;
   }
+}
+
+
+footer {
+  background-color: #f7f7f7;
+  border-top: 1px solid #dddddd;
+  padding: 1.5rem 0;
+  font-size: 0.9rem;
+  color: #484848;
+}
+
+.f-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: center;
+}
+
+.f-info-socials {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.f-info-socials i {
+  font-size: 1.2rem;
+  color: #222;
+  transition: color 0.3s;
+}
+
+.f-info-socials i:hover {
+  color: #ff385c; /* Airbnb red */
+}
+
+.f-info-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.f-info-links a {
+  text-decoration: none;
+  color: #484848;
+}
+
+.f-info-links a:hover {
+  text-decoration: underline;
+}
+
+.f-info-brand {
+  color: #717171;
 }
