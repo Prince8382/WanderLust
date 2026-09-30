@@ -1,137 +1,141 @@
 const Listing = require("../models/listing");
 
-// module.exports.index = async (req, res) => {
-//   const allListings = await Listing.find({});
-//   res.render("listings/index.ejs", { allListings });
-// };
 module.exports.index = async (req, res) => {
-  const { category } = req.query; 
-  let allListings;
+  const { category } = req.query;
+
+  let filter = {};
 
   if (category) {
-    allListings = await Listing.find({ category });
-  } else {
-    allListings = await Listing.find({});
+    filter.category = category.toLowerCase();
   }
-  res.render("listings/index.ejs", { allListings, selectedCategory: category || null  });
+
+  const allListings = await Listing.find(filter);
+
+  res.render("listings/index.ejs", {
+    allListings: allListings || [],
+    selectedCategory: category || null,
+    message:
+      allListings.length === 0
+        ? "No listings found in this category"
+        : undefined,
+  });
 };
 
-
+// NEW FORM
 module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
 
+// SHOW SINGLE LISTING
 module.exports.showListing = async (req, res) => {
   const { id } = req.params;
+
   const listing = await Listing.findById(id)
     .populate({
       path: "reviews",
-      populate: {
-        path: "author",
-      },
+      populate: { path: "author" },
     })
     .populate("owner");
-  if(!listing) {
-    req.flash("error", "Listing you requested for does not exist!");
-    res.redirect("/listings");
-  }
-  res.render("listings/show.ejs", { listing });
-};
 
-
-module.exports.searchListings = async (req, res) => {
-  const query = req.query.q?.trim(); 
-
-  if (!query) {
+  if (!listing) {
+    req.flash("error", "Listing you requested does not exist!");
     return res.redirect("/listings");
   }
 
+  res.render("listings/show.ejs", { listing });
+};
+
+// SEARCH LISTINGS
+module.exports.searchListings = async (req, res) => {
+  const query = req.query.q?.trim();
+
+  if (!query) return res.redirect("/listings");
 
   const listings = await Listing.find({
     $or: [
       { title: { $regex: query, $options: "i" } },
       { location: { $regex: query, $options: "i" } },
-      { category: { $regex: query, $options: "i" } }
-    ]
+      { category: { $regex: query, $options: "i" } },
+    ],
   });
-
-  
-  if (listings.length === 0) {
-    return res.render("listings/index", {
-      allListings: [],
-      message: `No results found for "${query}". Try a different keyword!`
-    });
-  }
-
 
   res.render("listings/index", {
     allListings: listings,
-    message: `Search results for "${query}"`
+    message:
+      listings.length === 0
+        ? `No results found for "${query}"`
+        : `Search results for "${query}"`,
   });
 };
 
-
+// CREATE LISTING
 module.exports.createListing = async (req, res) => {
-    let url = req.file.path;
-    let filename = req.file.filename;
+  const url = req.file.path;
+  const filename = req.file.filename;
 
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = {url, filename};
-    await newListing.save();
-    req.flash("success", "New Listing Created!");
-    res.redirect("/listings");
+  const newListing = new Listing(req.body.listing);
+  newListing.category = req.body.listing.category.toLowerCase();
+  newListing.owner = req.user._id;
+  newListing.image = { url, filename };
+
+  await newListing.save();
+
+  req.flash("success", "New Listing Created!");
+  res.redirect("/listings");
 };
 
+// EDIT FORM
 module.exports.renderEditForm = async (req, res) => {
   const { id } = req.params;
+
   const listing = await Listing.findById(id);
-  if(!listing) {
-    req.flash("error", "Listing you requested for does not exist!");
-    res.redirect("/listings");
+
+  if (!listing) {
+    req.flash("error", "Listing not found!");
+    return res.redirect("/listings");
   }
 
   let originalImageUrl = listing.image.url;
   originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
-  res.render("listings/edit.ejs", { listing, originalImageUrl });
+
+  res.render("listings/edit.ejs", {
+    listing,
+    originalImageUrl,
+  });
 };
 
+// UPDATE LISTING
 module.exports.updateListing = async (req, res) => {
-  let { id } = req.params;
+  const { id } = req.params;
+
   const listing = await Listing.findById(id);
-  
 
   listing.title = req.body.listing.title;
   listing.description = req.body.listing.description;
   listing.price = req.body.listing.price;
   listing.country = req.body.listing.country;
   listing.location = req.body.listing.location;
+  listing.category = req.body.listing.category.toLowerCase();
 
-if ( req.file) {
-      const url = req.file.path;
-      const filename = req.file.filename;
-      listing.image = { url, filename};
-  
+  if (req.file) {
+    listing.image = {
+      url: req.file.path,
+      filename: req.file.filename,
+    };
   }
+
   await listing.save();
+
   req.flash("success", "Listing Updated!");
   res.redirect(`/listings/${id}`);
 };
 
+// DELETE LISTING
 module.exports.destroyListing = async (req, res) => {
   const { id } = req.params;
+
   await Listing.findByIdAndDelete(id);
+
   req.flash("success", "Listing Deleted!");
   res.redirect("/listings");
 };
-
-module.exports.listByCategory = async (req, res) => {
-  const { categoryName } = req.params;
-  const allListings = await Listing.find({ category: categoryName });
-  if (!allListings.length) {
-    req.flash("error", `No listings found for category: ${categoryName}`);
-    return res.redirect("/listings");
-  }
-  res.render("listings/index", { allListings, selectedCategory: categoryName });
-};
-

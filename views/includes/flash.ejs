@@ -1,26 +1,84 @@
-<% if (success && success.length) { %>
-<div 
-class="alert alert-success alert-dismissible fade show col-6 offset-3" 
-role="alert">
+<style>
+/* ===== Flash Alerts Container ===== */
+.flash-wrapper {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 90%;
+  max-width: 500px;
+}
+
+/* ===== Alert Style Upgrade ===== */
+.alert {
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  animation: slideDown 0.4s ease;
+}
+
+/* Success */
+.alert-success {
+  background: #e6f9ed;
+  border-left: 5px solid #28a745;
+  color: #155724;
+}
+
+/* Error */
+.alert-danger {
+  background: #fdecea;
+  border-left: 5px solid #dc3545;
+  color: #721c24;
+}
+
+/* Close button */
+.btn-close {
+  font-size: 0.8rem;
+}
+
+/* Animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 576px) {
+  .flash-wrapper {
+    width: 95%;
+    top: 60px;
+  }
+
+  .alert {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+  }
+}
+</style>
+
+<div class="flash-wrapper">
+
+  <% if (success && success.length) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
     <%= success %>
-    <button type="button" 
-    class="btn-close" 
-    data-bs-dismiss="alert" 
-    aria-label="close">
-</button>
-</div>
-<% } %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <% } %>
 
-
- <% if (error && error.length) { %>
-<div 
-class="alert alert-danger alert-dismissible fade show col-6 offset-3" 
-role="alert">
+  <% if (error && error.length) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <%= error %>
-    <button type="button" 
-    class="btn-close" 
-    data-bs-dismiss="alert" 
-    aria-label="close">
-</button>
+    <%= error %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <% } %>
+
 </div>
-<% } %>

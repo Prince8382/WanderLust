@@ -1,37 +1,103 @@
-<!-- <footer>
-    <div class="f-info">
-        <div class="f-info-socials">
-            <i class="fa-brands fa-square-facebook"></i>
-            <i class="fa-brands fa-square-instagram"></i>
-            <i class="fa-brands fa-linkedin"></i>
+<style>
+/* ===== FOOTER BASE ===== */
+footer {
+  background: #f8f8f8;
+  margin-top: 40px;
+  padding: 25px 15px;
+  border-top: 1px solid #eee;
+}
 
-        </div>
-        <div class="f-info-brand">&copy; Wanderlust Private Limited</div>
-        <div class="f-info-links">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-        </div>
-    </div>
-</footer> -->
+/* Container */
+.f-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* Social icons */
+.f-info-socials a {
+  color: #333;
+  font-size: 1.2rem;
+  margin-right: 12px;
+  transition: 0.2s;
+}
+
+.f-info-socials a:hover {
+  color: #fe424d;
+  transform: translateY(-2px);
+}
+
+/* Brand */
+.f-info-brand {
+  font-weight: 600;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+/* Links */
+.f-info-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.f-info-links a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.f-info-links a:hover {
+  color: #fe424d;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .f-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .f-info-socials {
+    margin-bottom: 10px;
+  }
+
+  .f-info-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+</style>
 
 <footer>
   <div class="f-info">
+
+    <!-- Social -->
     <div class="f-info-socials">
-      <a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-      <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-      <a href="https://www.linkedin.com" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://linkedin.com" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
     </div>
 
+    <!-- Brand -->
     <div class="f-info-brand">
-      © Wanderlust Private Limited
+      © 2026 Wanderlust
     </div>
 
+    <!-- Links -->
     <div class="f-info-links">
       <a href="#">Privacy</a>
-      <span>·</span>
+      <span>•</span>
       <a href="#">Terms</a>
-      <span>·</span>
-      <a href="#">Company Details</a>
+      <span>•</span>
+      <a href="#">Support</a>
     </div>
+
   </div>
 </footer>
